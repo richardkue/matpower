@@ -300,7 +300,10 @@ if ~isempty(mpc.bus)
 
             switch alg
                 case {'NR', 'NR-SP', 'NR-SC', 'NR-SH', 'NR-IP', 'NR-IC', 'NR-IH'}
-                    if mpopt.pf.current_balance
+                    if mpopt.pf.nr.distributed_slack_bus
+                        newtonpf_fcn = @(Ybus, Sbus, V0, ref, pv, pq, mpopt)...
+                            newtonpf_distributed_slack_bus(Ybus, Sbus, V0, ref, pv, pq, mpopt, gen);
+                    elseif mpopt.pf.current_balance
                         switch mpopt.pf.v_cartesian
                             case 0                  %% current, polar
                                 newtonpf_fcn = @newtonpf_I_polar;
